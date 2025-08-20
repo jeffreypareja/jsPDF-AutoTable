@@ -128,6 +128,7 @@ function parseSettings(doc: DocHandler, options: UserOptions): Settings {
 
   const horizontalPageBreak: boolean = !!options.horizontalPageBreak
   const horizontalPageBreakRepeat = options.horizontalPageBreakRepeat ?? null
+  const offsetY = options.offsetY ?? 0
 
   return {
     includeHiddenHtml: options.includeHiddenHtml ?? false,
@@ -135,6 +136,7 @@ function parseSettings(doc: DocHandler, options: UserOptions): Settings {
     theme,
     startY,
     margin,
+    offsetY,
     pageBreak: options.pageBreak ?? 'auto',
     rowPageBreak: options.rowPageBreak ?? 'auto',
     tableWidth: options.tableWidth ?? 'auto',

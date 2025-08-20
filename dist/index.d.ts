@@ -49,6 +49,7 @@ export interface HookProps {
 }
 export interface Settings {
 	includeHiddenHtml: boolean;
+	offsetY: number;
 	useCss: boolean;
 	theme: "striped" | "grid" | "plain";
 	startY: number;
@@ -228,6 +229,7 @@ export interface UserOptions {
 	columnStyles?: {
 		[key: string]: Partial<Styles>;
 	};
+	offsetY?: number;
 	/** Called when the plugin finished parsing cell content. Can be used to override content or styles for a specific cell. */
 	didParseCell?: CellHook;
 	/** Called before a cell or row is drawn. Can be used to call native jspdf styling functions such as `doc.setTextColor` or change position of text etc before it is drawn. */

@@ -77,6 +77,7 @@ export interface UserOptions {
   footStyles?: Partial<Styles>
   alternateRowStyles?: Partial<Styles>
   columnStyles?: { [key: string]: Partial<Styles> }
+  offsetY?: number
 
   // Hooks
   /** Called when the plugin finished parsing cell content. Can be used to override content or styles for a specific cell. */

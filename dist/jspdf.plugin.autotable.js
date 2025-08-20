@@ -221,7 +221,7 @@ function calculateWidths(doc, table) {
         // reduce font size, increase page size or remove custom cell widths
         // to allow more columns to be reduced in size
         resizeWidth = resizeWidth < 1 ? resizeWidth : Math.round(resizeWidth);
-        console.warn("Of the table content, ".concat(resizeWidth, " units width could not fit page"));
+        console.log("Of the table content, ".concat(resizeWidth, " units width could not fit page"));
     }
     applyColSpans(table);
     fitContent(table, doc);
@@ -622,7 +622,7 @@ function parseHooks(global, document, current) {
     return result;
 }
 function parseSettings(doc, options) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
     var margin = (0, common_1.parseSpacing)(options.margin, 40 / doc.scaleFactor());
     var startY = (_a = getStartY(doc, options.startY)) !== null && _a !== void 0 ? _a : margin.top;
     var showFoot;
@@ -649,22 +649,24 @@ function parseSettings(doc, options) {
     var theme = options.theme || (useCss ? 'plain' : 'striped');
     var horizontalPageBreak = !!options.horizontalPageBreak;
     var horizontalPageBreakRepeat = (_e = options.horizontalPageBreakRepeat) !== null && _e !== void 0 ? _e : null;
+    var offsetY = (_f = options.offsetY) !== null && _f !== void 0 ? _f : 0;
     return {
-        includeHiddenHtml: (_f = options.includeHiddenHtml) !== null && _f !== void 0 ? _f : false,
+        includeHiddenHtml: (_g = options.includeHiddenHtml) !== null && _g !== void 0 ? _g : false,
         useCss: useCss,
         theme: theme,
         startY: startY,
         margin: margin,
-        pageBreak: (_g = options.pageBreak) !== null && _g !== void 0 ? _g : 'auto',
-        rowPageBreak: (_h = options.rowPageBreak) !== null && _h !== void 0 ? _h : 'auto',
-        tableWidth: (_j = options.tableWidth) !== null && _j !== void 0 ? _j : 'auto',
+        offsetY: offsetY,
+        pageBreak: (_h = options.pageBreak) !== null && _h !== void 0 ? _h : 'auto',
+        rowPageBreak: (_j = options.rowPageBreak) !== null && _j !== void 0 ? _j : 'auto',
+        tableWidth: (_k = options.tableWidth) !== null && _k !== void 0 ? _k : 'auto',
         showHead: showHead,
         showFoot: showFoot,
-        tableLineWidth: (_k = options.tableLineWidth) !== null && _k !== void 0 ? _k : 0,
-        tableLineColor: (_l = options.tableLineColor) !== null && _l !== void 0 ? _l : 200,
+        tableLineWidth: (_l = options.tableLineWidth) !== null && _l !== void 0 ? _l : 0,
+        tableLineColor: (_m = options.tableLineColor) !== null && _m !== void 0 ? _m : 200,
         horizontalPageBreak: horizontalPageBreak,
         horizontalPageBreakRepeat: horizontalPageBreakRepeat,
-        horizontalPageBreakBehaviour: (_m = options.horizontalPageBreakBehaviour) !== null && _m !== void 0 ? _m : 'afterAllRows',
+        horizontalPageBreakBehaviour: (_o = options.horizontalPageBreakBehaviour) !== null && _o !== void 0 ? _o : 'afterAllRows',
     };
 }
 function getStartY(doc, userStartY) {
@@ -1727,7 +1729,8 @@ var polyfills_1 = __webpack_require__(176);
 var tablePrinter_1 = __webpack_require__(626);
 function drawTable(jsPDFDoc, table) {
     var settings = table.settings;
-    var startY = settings.startY;
+    var offsetY = settings.offsetY || 0;
+    var startY = settings.startY + offsetY;
     var margin = settings.margin;
     var cursor = { x: margin.left, y: startY };
     var sectionsHeight = table.getHeadHeight(table.columns) + table.getFootHeight(table.columns);
@@ -1944,7 +1947,7 @@ function shouldPrintOnCurrentPage(doc, row, remainingPageSpace, table) {
     var minRowHeight = row.getMinimumRowHeight(table.columns, doc);
     var minRowFits = minRowHeight < remainingPageSpace;
     if (minRowHeight > maxRowHeight) {
-        console.error("Will not be able to print row ".concat(row.index, " correctly since it's minimum height is larger than page height"));
+        console.log("Will not be able to print row ".concat(row.index, " correctly since it's minimum height is larger than page height"));
         return true;
     }
     if (!minRowFits) {
@@ -1954,7 +1957,7 @@ function shouldPrintOnCurrentPage(doc, row, remainingPageSpace, table) {
     var rowHigherThanPage = row.getMaxCellHeight(table.columns) > maxRowHeight;
     if (rowHigherThanPage) {
         if (rowHasRowSpanCell) {
-            console.error("The content of row ".concat(row.index, " will not be drawn correctly since drawing rows with a height larger than the page height and has cells with rowspans is not supported."));
+            console.log("The content of row ".concat(row.index, " will not be drawn correctly since drawing rows with a height larger than the page height and has cells with rowspans is not supported."));
         }
         return true;
     }

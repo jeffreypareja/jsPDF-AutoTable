@@ -24,7 +24,8 @@ export interface HookProps {
 }
 
 export interface Settings {
-  includeHiddenHtml: boolean
+  includeHiddenHtml: boolean,
+  offsetY: number,
   useCss: boolean
   theme: 'striped' | 'grid' | 'plain'
   startY: number

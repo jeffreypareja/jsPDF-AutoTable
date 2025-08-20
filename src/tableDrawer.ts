@@ -8,7 +8,8 @@ import { calculateAllColumnsCanFitInPage } from './tablePrinter'
 
 export function drawTable(jsPDFDoc: jsPDFDocument, table: Table): void {
   const settings = table.settings
-  const startY = settings.startY
+  const offsetY = settings.offsetY || 0
+  const startY = settings.startY + offsetY
   const margin = settings.margin
   const cursor = { x: margin.left, y: startY }
   const sectionsHeight =
