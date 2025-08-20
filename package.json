@@ -1,6 +1,6 @@
 {
   "name": "jspdf-autotable-pfe",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Generate pdf tables with javascript (jsPDF plugin)",
   "homepage": "https://github.com/jeffreypareja/jsPDF-AutoTable",
   "main": "dist/jspdf.plugin.autotable.js",
@@ -87,5 +87,8 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/simonbengtsson/jsPDF-AutoTable/issues"
+  },
+  "dependencies": {
+    "jspdf-autotable-pfe": "^5.0.2"
   }
 }

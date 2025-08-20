@@ -9,6 +9,7 @@ import { calculateAllColumnsCanFitInPage } from './tablePrinter'
 export function drawTable(jsPDFDoc: jsPDFDocument, table: Table): void {
   const settings = table.settings
   const offsetY = settings.offsetY || 0
+  console.log('the offset y', offsetY, settings)
   const startY = settings.startY + offsetY
   const margin = settings.margin
   const cursor = { x: margin.left, y: startY }
@@ -57,7 +58,7 @@ export function drawTable(jsPDFDoc: jsPDFDocument, table: Table): void {
     doc.applyStyles(doc.userStyles)
     table.body.forEach((row, index) => {
       const isLastRow = index === table.body.length - 1
-      printFullRow(doc, table, row, isLastRow, startPos, cursor, table.columns)
+      printFullRow(doc, table, row, isLastRow, startPos, cursor, table.columns, offsetY)
     })
     doc.applyStyles(doc.userStyles)
 
@@ -375,7 +376,9 @@ function printFullRow(
   startPos: Pos,
   cursor: Pos,
   columns: Column[],
+  offsetY: number = 0,
 ) {
+  console.log('printFullRow', row.index, isLastRow, startPos, cursor, columns, offsetY)
   const remainingSpace = getRemainingPageSpace(doc, table, isLastRow, cursor)
   if (row.canEntireRowFit(remainingSpace, columns)) {
     // The row fits in the current page
@@ -385,11 +388,11 @@ function printFullRow(
     const remainderRow = modifyRowToFit(row, remainingSpace, table, doc)
     printRow(doc, table, row, cursor, columns)
     addPage(doc, table, startPos, cursor, columns)
-    printFullRow(doc, table, remainderRow, isLastRow, startPos, cursor, columns)
+    printFullRow(doc, table, remainderRow, isLastRow, startPos, cursor, columns, offsetY)
   } else {
     // The row get printed entirelly on the next page
-    addPage(doc, table, startPos, cursor, columns)
-    printFullRow(doc, table, row, isLastRow, startPos, cursor, columns)
+    addPage(doc, table, startPos, cursor, columns, false, offsetY)
+    printFullRow(doc, table, row, isLastRow, startPos, cursor, columns, offsetY)
   }
 }
 
@@ -579,6 +582,7 @@ export function addPage(
   cursor: Pos,
   columns: Column[] = [],
   suppressFooter: boolean = false,
+  offsetY: number = 0,
 ) {
   doc.applyStyles(doc.userStyles)
   if (table.settings.showFoot === 'everyPage' && !suppressFooter) {
@@ -594,8 +598,8 @@ export function addPage(
   nextPage(doc)
   table.pageNumber++
   cursor.x = margin.left
-  cursor.y = margin.top
-  startPos.y = margin.top
+  cursor.y = margin.top + offsetY
+  startPos.y = margin.top + offsetY
 
   // call didAddPage hooks before any content is added to the page
   table.callWillDrawPageHooks(doc, cursor)
